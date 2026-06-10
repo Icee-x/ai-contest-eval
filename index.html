@@ -215,6 +215,80 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
   .container { max-width: 100%; padding: 10px; }
   .card { box-shadow: none; border: 1px solid #ddd; }
 }
+/* ==================== PRESENTATION MODE ==================== */
+#pres-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 9999; background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  color: #fff; overflow: hidden; flex-direction: column;
+}
+#pres-overlay.active { display: flex; }
+.pres-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 48px 12px; flex-shrink: 0;
+}
+.pres-header .pres-title { font-size: 16px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; }
+.pres-header .pres-nav { display: flex; align-items: center; gap: 16px; }
+.pres-header .pres-counter { font-size: 15px; color: #64748b; min-width: 80px; text-align: center; }
+.pres-header button {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+  width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.pres-header button:hover { background: rgba(255,255,255,0.2); }
+.pres-close {
+  background: rgba(239,68,68,0.2) !important; border-color: rgba(239,68,68,0.4) !important;
+  color: #f87171 !important; font-size: 16px !important; width: 36px !important; height: 36px !important;
+}
+.pres-body {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 48px 48px; gap: 32px;
+}
+.pres-work-info { text-align: center; }
+.pres-work-info .pres-badge {
+  display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 13px;
+  font-weight: 600; margin-bottom: 12px; letter-spacing: 1px;
+}
+.pres-work-info .pres-num { font-size: 20px; color: #64748b; margin-bottom: 4px; }
+.pres-work-info .pres-name { font-size: 42px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+.pres-work-info .pres-team { font-size: 16px; color: #94a3b8; }
+.pres-scores { display: flex; gap: 48px; align-items: flex-end; justify-content: center; }
+.pres-score-item { text-align: center; }
+.pres-score-circle {
+  width: 140px; height: 140px; border-radius: 50%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; margin: 0 auto 12px;
+  border: 4px solid rgba(255,255,255,0.15); position: relative;
+}
+.pres-score-circle .pres-score-val { font-size: 48px; font-weight: 800; line-height: 1; }
+.pres-score-circle .pres-score-max { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.pres-score-item .pres-dim-name { font-size: 15px; color: #cbd5e1; font-weight: 600; }
+.pres-total-box {
+  text-align: center; padding: 20px 40px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
+  border: 1px solid rgba(139,92,246,0.4);
+}
+.pres-total-box .pres-total-label { font-size: 14px; color: #a5b4fc; letter-spacing: 2px; margin-bottom: 4px; }
+.pres-total-box .pres-total-val { font-size: 64px; font-weight: 900; line-height: 1; }
+.pres-total-box .pres-total-max { font-size: 16px; color: rgba(255,255,255,0.4); }
+.pres-comment {
+  max-width: 800px; text-align: center; font-size: 16px; color: #94a3b8;
+  line-height: 1.8; padding: 16px 24px; border-left: 3px solid rgba(99,102,241,0.5);
+  background: rgba(255,255,255,0.03); border-radius: 0 8px 8px 0;
+}
+.pres-progress {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 0.3s ease;
+}
+/* Responsive for mobile */
+@media (max-width: 768px) {
+  .pres-body { padding: 0 20px 32px; gap: 20px; }
+  .pres-work-info .pres-name { font-size: 28px; }
+  .pres-scores { gap: 20px; }
+  .pres-score-circle { width: 100px; height: 100px; }
+  .pres-score-circle .pres-score-val { font-size: 36px; }
+  .pres-total-box .pres-total-val { font-size: 48px; }
+  .pres-comment { font-size: 14px; padding: 12px 16px; }
+  .pres-header { padding: 16px 20px 8px; }
+}
 </style>
 </head>
 <body>
@@ -225,6 +299,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
     <button id="tab-admin" class="active" onclick="switchView('admin')">管理后台</button>
     <button id="tab-judge" onclick="switchView('judge')">评委打分</button>
     <button id="tab-dashboard" onclick="switchView('dashboard')">成绩看板</button>
+    <button onclick="openPresentation()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);font-size:12px;padding:6px 12px">🎤 AI评测展示</button>
   </div>
 </nav>
 
@@ -476,6 +551,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
 </div>
 
 <div id="toast-container"></div>
+
+<!-- ==================== PRESENTATION OVERLAY ==================== -->
+<div id="pres-overlay">
+  <div class="pres-header">
+    <div class="pres-title">AI评测结果</div>
+    <div class="pres-nav">
+      <button class="pres-close" onclick="closePresentation()" title="关闭 (ESC)">✕</button>
+      <button onclick="presNav(-1)" title="上一个 (←)">‹</button>
+      <span class="pres-counter" id="pres-counter">1 / 21</span>
+      <button onclick="presNav(1)" title="下一个 (→)">›</button>
+    </div>
+  </div>
+  <div class="pres-body">
+    <div class="pres-work-info">
+      <div class="pres-badge" id="pres-badge" style="background:rgba(99,102,241,0.3);color:#a5b4fc">A组</div>
+      <div class="pres-num" id="pres-num">#1</div>
+      <div class="pres-name" id="pres-name">作品名称</div>
+      <div class="pres-team" id="pres-team">团队赛</div>
+    </div>
+    <div class="pres-scores" id="pres-scores"></div>
+    <div class="pres-total-box">
+      <div class="pres-total-label">AI评测总分</div>
+      <div class="pres-total-val" id="pres-total">0</div>
+      <div class="pres-total-max" id="pres-total-max">/ 80</div>
+    </div>
+    <div class="pres-comment" id="pres-comment">AI评测评语</div>
+  </div>
+  <div class="pres-progress" id="pres-progress"></div>
+</div>
 
 <script>
 // ==================== STATE ====================
@@ -1405,6 +1509,90 @@ renderAdmin();
   placeholder += dims[0].name.substring(0,2) + ' | 28,22,20';
   document.getElementById('batch-ai-text').placeholder = placeholder;
 })();
+
+// ==================== PRESENTATION MODE ====================
+var presIndex = 0;
+var presColors = ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981'];
+var groupColorMap = { 'A':'#3b82f6', 'B':'#22c55e', 'C':'#f59e0b', 'D':'#ef4444' };
+
+function openPresentation() {
+  presIndex = 0;
+  document.getElementById('pres-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderPresSlide();
+}
+
+function closePresentation() {
+  document.getElementById('pres-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function presNav(dir) {
+  var works = state.config.works;
+  presIndex = (presIndex + dir + works.length) % works.length;
+  renderPresSlide();
+}
+
+function renderPresSlide() {
+  var works = state.config.works;
+  var work = works[presIndex];
+  if (!work) return;
+
+  var dims = state.config.dimensions;
+  var groupColor = groupColorMap[work.judgeGroup] || '#6366f1';
+
+  // Badge
+  var badge = document.getElementById('pres-badge');
+  var grp = state.config.judgeGroups && state.config.judgeGroups[work.judgeGroup];
+  badge.textContent = grp ? grp.name : (work.judgeGroup + '组');
+  badge.style.background = groupColor + '33';
+  badge.style.color = groupColor;
+
+  // Info
+  document.getElementById('pres-num').textContent = '#' + (presIndex + 1);
+  document.getElementById('pres-name').textContent = work.name;
+  document.getElementById('pres-team').textContent = work.team;
+  document.getElementById('pres-counter').textContent = (presIndex + 1) + ' / ' + works.length;
+
+  // Scores
+  var scoresHtml = '';
+  var aiTotal = 0;
+  for (var i = 0; i < AI_DIM_COUNT; i++) {
+    var dim = dims[i];
+    var val = (work.aiScores && work.aiScores[i]) || 0;
+    aiTotal += val;
+    var pct = dim.max > 0 ? Math.round(val / dim.max * 100) : 0;
+    var color = pct >= 80 ? '#22c55e' : (pct >= 60 ? '#f59e0b' : '#64748b');
+    scoresHtml += '<div class="pres-score-item">';
+    scoresHtml += '<div class="pres-score-circle" style="border-color:' + color + '44; background:radial-gradient(circle, ' + color + '11 0%, transparent 70%)">';
+    scoresHtml += '<div class="pres-score-val" style="color:' + color + '">' + val + '</div>';
+    scoresHtml += '<div class="pres-score-max">/ ' + dim.max + '</div>';
+    scoresHtml += '</div>';
+    scoresHtml += '<div class="pres-dim-name">' + escHtml(dim.name) + '</div>';
+    scoresHtml += '</div>';
+  }
+  document.getElementById('pres-scores').innerHTML = scoresHtml;
+
+  // Total
+  document.getElementById('pres-total').textContent = aiTotal;
+  document.getElementById('pres-total-max').textContent = '/ ' + getAIMax();
+
+  // Comment
+  document.getElementById('pres-comment').textContent = work.description || '暂无AI评语';
+
+  // Progress bar
+  var pct = works.length > 1 ? ((presIndex) / (works.length - 1) * 100) : 0;
+  document.getElementById('pres-progress').style.width = pct + '%';
+}
+
+// Keyboard navigation for presentation mode
+document.addEventListener('keydown', function(e) {
+  var overlay = document.getElementById('pres-overlay');
+  if (!overlay.classList.contains('active')) return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { presNav(-1); e.preventDefault(); }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { presNav(1); e.preventDefault(); }
+  if (e.key === 'Escape') { closePresentation(); e.preventDefault(); }
+});
 </script>
 </body>
 </html>
