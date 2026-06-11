@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI创造大赛 · 路演评测系统</title>
+<style>
+:root {
+  --primary: #4361ee;
+  --primary-light: #eef2ff;
+  --primary-dark: #3730a3;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+.top-nav {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white; padding: 0 20px; display: flex; align-items: center;
+  height: 56px; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(67,97,238,0.3);
+}
+.top-nav .logo { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
+.top-nav .logo span { opacity: 0.8; font-weight: 400; font-size: 14px; margin-left: 8px; }
+.nav-tabs { display: flex; gap: 4px; margin-left: auto; }
+.nav-tabs button {
+  background: rgba(255,255,255,0.15); border: none; color: rgba(255,255,255,0.8);
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;
+  transition: all 0.2s; font-weight: 500; font-family: inherit;
+}
+.nav-tabs button:hover { background: rgba(255,255,255,0.25); color: white; }
+.nav-tabs button.active { background: white; color: var(--primary); font-weight: 600; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+.card {
+  background: var(--card); border-radius: var(--radius); padding: 24px;
+  box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--border);
+}
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.card-title { font-size: 16px; font-weight: 600; color: var(--text); }
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 14px; color: var(--text); background: white; transition: border-color 0.2s;
+  font-family: inherit;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67,97,238,0.1); }
+.form-textarea { resize: vertical; min-height: 80px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(67,97,238,0.3); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #059669; }
+.btn-warning { background: var(--warning); color: white; }
+.btn-warning:hover { background: #d97706; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-outline { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+.btn-icon { padding: 8px; border-radius: 8px; background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 18px; }
+.btn-icon:hover { background: var(--primary-light); color: var(--primary); }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.badge {
+  display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+}
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-success { background: #d1fae5; color: #059669; }
+.badge-warning { background: #fef3c7; color: #d97706; }
+
+.score-input-group { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.score-input-group .dim-name { flex: 1; font-size: 14px; font-weight: 500; min-width: 100px; }
+.score-input-group .dim-max { font-size: 12px; color: var(--text-light); min-width: 50px; text-align: right; }
+.score-slider { flex: 2; -webkit-appearance: none; height: 6px; border-radius: 3px; background: #e2e8f0; outline: none; }
+.score-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 2px 6px rgba(67,97,238,0.3); }
+.score-value {
+  width: 56px; text-align: center; font-size: 18px; font-weight: 700;
+  color: var(--primary); padding: 4px; border: 1.5px solid var(--border);
+  border-radius: 8px; background: var(--primary-light);
+}
+
+.works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.work-card {
+  background: white; border-radius: var(--radius); padding: 20px;
+  border: 1.5px solid var(--border); transition: all 0.2s; cursor: pointer;
+}
+.work-card:hover { border-color: var(--primary); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.work-card .work-num { font-size: 12px; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+.work-card .work-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.work-card .work-team { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
+.work-card .work-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.work-card .work-scores { display: flex; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.score-tag { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+.score-tag.ai { background: #dbeafe; color: #2563eb; }
+.score-tag.human { background: #fce7f3; color: #db2777; }
+.score-tag.total { background: #d1fae5; color: #059669; }
+
+.rank-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.rank-table th { background: var(--primary-light); color: var(--primary-dark); font-size: 13px; font-weight: 600; padding: 12px 16px; text-align: left; position: sticky; top: 56px; z-index: 10; }
+.rank-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.rank-table tr:hover td { background: #f8fafc; }
+.rank-num { font-size: 20px; font-weight: 800; text-align: center; width: 50px; }
+.rank-1 { color: #f59e0b; }
+.rank-2 { color: #94a3b8; }
+.rank-3 { color: #b45309; }
+
+.progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); border-radius: 4px; transition: width 0.3s; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: white; border-radius: 16px; width: 100%; max-width: 640px;
+  max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg);
+}
+.modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { font-size: 18px; font-weight: 700; }
+.modal-body { padding: 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+.toast {
+  position: fixed; top: 70px; right: 20px; z-index: 300;
+  background: white; padding: 14px 20px; border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.success { border-left: 4px solid var(--success); }
+.toast.error { border-left: 4px solid var(--danger); }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state p { font-size: 15px; margin-bottom: 16px; }
+
+.judge-selector {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white; padding: 30px; border-radius: 16px; text-align: center;
+  max-width: 400px; margin: 60px auto;
+}
+.judge-selector h2 { font-size: 22px; margin-bottom: 8px; }
+.judge-selector p { opacity: 0.85; margin-bottom: 20px; font-size: 14px; }
+.judge-selector .form-input { text-align: center; font-size: 16px; padding: 14px; }
+.judge-selector .btn { margin-top: 16px; width: 100%; justify-content: center; font-size: 16px; padding: 14px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: white; border-radius: 10px; padding: 16px; text-align: center; border: 1px solid var(--border); }
+.stat-value { font-size: 28px; font-weight: 800; color: var(--primary); }
+.stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+.weight-config { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--primary-light); border-radius: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.weight-config label { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.weight-config .weight-val { font-size: 20px; font-weight: 800; color: var(--primary); min-width: 48px; text-align: center; }
+
+.dim-row {
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+  background: #f8fafc; border-radius: 8px; margin-bottom: 8px;
+}
+.dim-row .form-input { flex: 1; padding: 8px 10px; }
+.dim-row .form-input.small { max-width: 80px; text-align: center; }
+
+.score-panel { padding: 20px; }
+.score-panel .work-info { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+.score-panel .work-info h3 { font-size: 20px; margin-bottom: 4px; }
+.score-panel .work-info .team { color: var(--text-light); font-size: 14px; }
+.score-panel .work-info .desc { margin-top: 8px; font-size: 14px; color: var(--text-light); line-height: 1.6; }
+.score-panel .work-info .link a { color: var(--primary); font-size: 13px; text-decoration: none; }
+.score-panel .work-info .link a:hover { text-decoration: underline; }
+.score-panel .total-display { text-align: center; padding: 16px; background: linear-gradient(135deg, var(--primary-light), #dbeafe); border-radius: 12px; margin-top: 16px; }
+.score-panel .total-display .label { font-size: 13px; color: var(--text-light); }
+.score-panel .total-display .value { font-size: 36px; font-weight: 800; color: var(--primary); }
+
+.comment-box { margin-top: 16px; }
+.work-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; margin-top: 16px; border-top: 1px solid var(--border); }
+.work-nav .counter { font-size: 14px; color: var(--text-light); font-weight: 500; }
+
+.ai-ref-bar { padding: 8px 12px; background: #eef2ff; border-radius: 8px; margin-bottom: 16px; font-size: 13px; color: var(--primary-dark); }
+.ai-ref-bar b { color: var(--primary); }
+
+.hidden { display: none !important; }
+
+@media (max-width: 768px) {
+  .top-nav { padding: 0 12px; height: 50px; }
+  .top-nav .logo { font-size: 15px; }
+  .top-nav .logo span { display: none; }
+  .nav-tabs button { padding: 6px 10px; font-size: 12px; }
+  .container { padding: 12px; }
+  .card { padding: 16px; }
+  .works-grid { grid-template-columns: 1fr; }
+  .rank-table th, .rank-table td { padding: 8px 10px; font-size: 12px; }
+}
+
+@media print {
+  .top-nav, .nav-tabs, .btn, .no-print { display: none !important; }
+  .container { max-width: 100%; padding: 10px; }
+  .card { box-shadow: none; border: 1px solid #ddd; }
+}
+/* ==================== PRESENTATION MODE ==================== */
+#pres-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 9999; background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  color: #fff; overflow: hidden; flex-direction: column;
+}
+#pres-overlay.active { display: flex; }
+.pres-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 48px 12px; flex-shrink: 0;
+}
+.pres-header .pres-title { font-size: 16px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; }
+.pres-header .pres-nav { display: flex; align-items: center; gap: 16px; }
+.pres-header .pres-counter { font-size: 15px; color: #64748b; min-width: 80px; text-align: center; }
+.pres-header button {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+  width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.pres-header button:hover { background: rgba(255,255,255,0.2); }
+.pres-close {
+  background: rgba(239,68,68,0.2) !important; border-color: rgba(239,68,68,0.4) !important;
+  color: #f87171 !important; font-size: 16px !important; width: 36px !important; height: 36px !important;
+}
+.pres-body {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 48px 48px; gap: 32px;
+}
+.pres-work-info { text-align: center; }
+.pres-work-info .pres-badge {
+  display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 13px;
+  font-weight: 600; margin-bottom: 12px; letter-spacing: 1px;
+}
+.pres-work-info .pres-num { font-size: 20px; color: #64748b; margin-bottom: 4px; }
+.pres-work-info .pres-name { font-size: 42px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+.pres-work-info .pres-team { font-size: 16px; color: #94a3b8; }
+.pres-scores { display: flex; gap: 48px; align-items: flex-end; justify-content: center; }
+.pres-score-item { text-align: center; }
+.pres-score-circle {
+  width: 140px; height: 140px; border-radius: 50%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; margin: 0 auto 12px;
+  border: 4px solid rgba(255,255,255,0.15); position: relative;
+}
+.pres-score-circle .pres-score-val { font-size: 48px; font-weight: 800; line-height: 1; }
+.pres-score-circle .pres-score-max { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.pres-score-item .pres-dim-name { font-size: 15px; color: #cbd5e1; font-weight: 600; }
+.pres-total-box {
+  text-align: center; padding: 20px 40px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3));
+  border: 1px solid rgba(139,92,246,0.4);
+}
+.pres-total-box .pres-total-label { font-size: 14px; color: #a5b4fc; letter-spacing: 2px; margin-bottom: 4px; }
+.pres-total-box .pres-total-val { font-size: 64px; font-weight: 900; line-height: 1; }
+.pres-total-box .pres-total-max { font-size: 16px; color: rgba(255,255,255,0.4); }
+.pres-comment {
+  max-width: 800px; text-align: center; font-size: 16px; color: #94a3b8;
+  line-height: 1.8; padding: 16px 24px; border-left: 3px solid rgba(99,102,241,0.5);
+  background: rgba(255,255,255,0.03); border-radius: 0 8px 8px 0;
+}
+.pres-progress {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 0.3s ease;
+}
+/* Responsive for mobile */
+@media (max-width: 768px) {
+  .pres-body { padding: 0 20px 32px; gap: 20px; }
+  .pres-work-info .pres-name { font-size: 28px; }
+  .pres-scores { gap: 20px; }
+  .pres-score-circle { width: 100px; height: 100px; }
+  .pres-score-circle .pres-score-val { font-size: 36px; }
+  .pres-total-box .pres-total-val { font-size: 48px; }
+  .pres-comment { font-size: 14px; padding: 12px 16px; }
+  .pres-header { padding: 16px 20px 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="logo">AI创造大赛<span>路演评测系统</span></div>
+  <div class="nav-tabs">
+    <button id="tab-admin" class="active" onclick="switchView('admin')">管理后台</button>
+    <button id="tab-judge" onclick="switchView('judge')">评委打分</button>
+    <button id="tab-dashboard" onclick="switchView('dashboard')">成绩看板</button>
+    <button onclick="openPresentation()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);font-size:12px;padding:6px 12px">🎤 AI评测展示</button>
+  </div>
+</nav>
+
+<!-- ==================== ADMIN VIEW ==================== -->
+<div id="view-admin" class="container">
+  <div class="stats-row" id="admin-stats"></div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">评分规则</div></div>
+    <div class="weight-config">
+      <label>AI评测分值</label>
+      <span class="weight-val" id="ai-max-display">80分</span>
+      <span style="font-size:12px; color:var(--text-light)" id="ai-dims-display">业务价值30 + 技术创新25 + 落地性25</span>
+      <span style="color:var(--text-light); font-size:13px">|</span>
+      <label>评委打分分值</label>
+      <span class="weight-val" id="human-max-display">100分</span>
+      <span style="font-size:12px; color:var(--text-light)" id="human-dims-display">业务价值30 + 技术创新25 + 落地性25 + 展示表达10 + 推广潜力10</span>
+    </div>
+    <div style="text-align:center; padding:8px 0 4px; font-size:13px; color:#6b5ce7; font-weight:600;">
+      最终得分 = 人工评分平均分 &times; 60% + AI评分 &times; 40%
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">评分维度（AI预评前3项，评委现场评全部5项，满分100）</div>
+      <button class="btn btn-sm btn-primary" onclick="addDimension()">+ 添加维度</button>
+    </div>
+    <div id="dimensions-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">参赛作品 (<span id="works-count">0</span>)</div>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline" onclick="showModal('modal-import-works')">批量导入</button>
+        <button class="btn btn-sm btn-primary" onclick="addWork()">+ 添加作品</button>
+      </div>
+    </div>
+    <div id="works-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">AI评测分数</div>
+      <button class="btn btn-sm btn-outline" onclick="showModal('modal-batch-ai')">批量录入</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="rank-table" id="ai-score-table">
+        <thead><tr id="ai-score-header"></tr></thead>
+        <tbody id="ai-score-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">数据管理</div></div>
+    <div class="btn-group">
+      <button class="btn btn-outline" onclick="exportAll()">📦 导出全部数据</button>
+      <button class="btn btn-outline" onclick="document.getElementById('file-import').click()">📥 导入数据</button>
+      <input type="file" id="file-import" accept=".json" style="display:none" onchange="handleFileImport(event)">
+      <button class="btn btn-outline" onclick="exportResults()">📊 导出成绩CSV</button>
+      <button class="btn btn-warning" onclick="clearJudgeScores()">🔄 清空评委分数</button>
+      <button class="btn btn-danger" onclick="resetAll()">⚠️ 重置全部</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== JUDGE VIEW ==================== -->
+<div id="view-judge" class="container hidden">
+  <!-- Judge login -->
+  <div id="judge-login">
+    <div class="judge-selector">
+      <h2>🎯 评委打分入口</h2>
+      <p>请选择您的评委分组并输入姓名</p>
+      <div id="judge-group-selector" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;"></div>
+      <input class="form-input" id="judge-name-input" placeholder="请输入姓名" onkeydown="if(event.key==='Enter')enterJudge()">
+      <button class="btn btn-primary" onclick="enterJudge()" style="background:white; color:var(--primary); font-weight:700; margin-top:16px; width:100%; justify-content:center;">
+        开始评分 →
+      </button>
+    </div>
+  </div>
+
+  <!-- Judge scoring interface -->
+  <div id="judge-main" class="hidden">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px">
+      <div>
+        <span class="badge badge-primary" id="judge-name-display"></span>
+        <span style="font-size:13px; color:var(--text-light); margin-left:8px">
+          已评 <span id="judge-scored-count">0</span>/<span id="judge-total-count">0</span>
+        </span>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline" onclick="exportJudgeScores()">📤 导出我的评分</button>
+        <button class="btn btn-sm btn-warning" onclick="exitJudge()">切换评委</button>
+      </div>
+    </div>
+    <div class="progress-bar" style="margin-bottom:16px">
+      <div class="progress-fill" id="judge-progress" style="width:0%"></div>
+    </div>
+
+    <!-- Works grid for judge -->
+    <div id="judge-works-grid" class="works-grid"></div>
+
+    <!-- Scoring panel (hidden by default) -->
+    <div id="judge-scoring" class="card hidden">
+      <button class="btn btn-sm btn-outline" onclick="closeScoring()" style="margin-bottom:16px">← 返回列表</button>
+      <div class="score-panel">
+        <div class="work-info">
+          <h3 id="scoring-work-name"></h3>
+          <div class="team" id="scoring-work-team"></div>
+          <div class="desc" id="scoring-work-desc"></div>
+          <div class="link" id="scoring-work-link"></div>
+        </div>
+        <div class="ai-ref-bar" id="scoring-ai-ref"></div>
+        <div style="margin-bottom:12px; padding:10px; background:#fef3c7; border-radius:8px; font-size:13px; color:#92400e">
+          📌 请对以下全部5个维度打分（满分100分），AI已提前评测前3个维度供参考
+        </div>
+        <div id="scoring-dims"></div>
+        <div class="comment-box">
+          <div class="form-label">评语（选填）</div>
+          <textarea class="form-textarea" id="scoring-comment" placeholder="对该作品的评价..." rows="3"></textarea>
+        </div>
+        <div class="total-display">
+          <div class="label">评委打分总分（满分100）</div>
+          <div class="value" id="scoring-total">0</div>
+          <div id="scoring-combined" style="font-size:13px; color:var(--text-light); margin-top:4px"></div>
+        </div>
+        <div class="work-nav">
+          <button class="btn btn-sm btn-outline" id="btn-prev" onclick="prevWork()">← 上一个</button>
+          <span class="counter" id="work-counter"></span>
+          <button class="btn btn-sm btn-primary" id="btn-next" onclick="nextWork()">下一个 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD VIEW ==================== -->
+<div id="view-dashboard" class="container hidden">
+  <div class="stats-row" id="dash-stats"></div>
+
+  <div class="card" id="judge-progress-card">
+    <div class="card-header"><div class="card-title">评委评分进度</div></div>
+    <div id="judge-progress-list"></div>
+  </div>
+
+  <div class="card no-print">
+    <div class="card-header"><div class="card-title">导入评委评分</div></div>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:12px">
+      评委在各自设备上完成评分后，点击「导出我的评分」生成JSON文件，在此导入汇总。
+    </p>
+    <button class="btn btn-primary" onclick="document.getElementById('judge-file-import').click()">📥 导入评委评分文件</button>
+    <input type="file" id="judge-file-import" accept=".json" style="display:none" onchange="handleJudgeFileImport(event)">
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🏆 成绩排名</div>
+      <div class="btn-group no-print">
+        <button class="btn btn-sm btn-outline" onclick="exportResults()">📊 导出CSV</button>
+        <button class="btn btn-sm btn-outline" onclick="window.print()">🖨️ 打印</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="rank-table" id="rank-table">
+        <thead><tr id="rank-header"></tr></thead>
+        <tbody id="rank-body"></tbody>
+      </table>
+    </div>
+    <div id="rank-empty" class="empty-state hidden">
+      <div class="icon">📋</div>
+      <p>暂无评分数据</p>
+      <p style="font-size:13px">请先在管理后台添加作品并录入AI评分，评委完成打分后将在此显示排名</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+<div id="modal-import-works" class="modal-overlay hidden" onclick="if(event.target===this)hideModal('modal-import-works')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>批量导入作品</h3>
+      <button class="btn-icon" onclick="hideModal('modal-import-works')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:12px">
+        每行一个作品，格式：团队名 | 作品名 | 简介(可选) | 链接(可选)
+      </p>
+      <textarea class="form-textarea" id="import-works-text" rows="12"
+        placeholder="示例：&#10;王皓天 | 航空物流部ChatBI机器人 | 基于大模型的智能数据分析 | https://alidocs...&#10;许佳华 | FFM报文邮件定时整理 | 自动化处理航班报文&#10;龙桥喜 | 订单异常分析管理"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-import-works')">取消</button>
+      <button class="btn btn-primary" onclick="doImportWorks()">导入</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-edit-work" class="modal-overlay hidden" onclick="if(event.target===this)hideModal('modal-edit-work')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>编辑作品</h3>
+      <button class="btn-icon" onclick="hideModal('modal-edit-work')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-work-index">
+      <div class="form-group">
+        <label class="form-label">作品名称</label>
+        <input class="form-input" id="edit-work-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">团队/选手</label>
+        <input class="form-input" id="edit-work-team">
+      </div>
+      <div class="form-group">
+        <label class="form-label">作品简介</label>
+        <textarea class="form-textarea" id="edit-work-desc" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">文档链接</label>
+        <input class="form-input" id="edit-work-link">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-edit-work')">取消</button>
+      <button class="btn btn-primary" onclick="saveEditWork()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-batch-ai" class="modal-overlay hidden" onclick="if(event.target===this)hideModal('modal-batch-ai')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>批量录入AI评分</h3>
+      <button class="btn-icon" onclick="hideModal('modal-batch-ai')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:12px" id="batch-ai-hint">
+        每行格式：作品序号或名称 | 各维度分数(逗号分隔)
+      </p>
+      <textarea class="form-textarea" id="batch-ai-text" rows="12"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-batch-ai')">取消</button>
+      <button class="btn btn-primary" onclick="doBatchAI()">录入</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- ==================== PRESENTATION OVERLAY ==================== -->
+<div id="pres-overlay">
+  <div class="pres-header">
+    <div class="pres-title">AI评测结果</div>
+    <div class="pres-nav">
+      <button class="pres-close" onclick="closePresentation()" title="关闭 (ESC)">✕</button>
+      <button onclick="presNav(-1)" title="上一个 (←)">‹</button>
+      <span class="pres-counter" id="pres-counter">1 / 21</span>
+      <button onclick="presNav(1)" title="下一个 (→)">›</button>
+    </div>
+  </div>
+  <div class="pres-body">
+    <div class="pres-work-info">
+      <div class="pres-badge" id="pres-badge" style="background:rgba(99,102,241,0.3);color:#a5b4fc">A组</div>
+      <div class="pres-num" id="pres-num">#1</div>
+      <div class="pres-name" id="pres-name">作品名称</div>
+      <div class="pres-team" id="pres-team">团队赛</div>
+    </div>
+    <div class="pres-scores" id="pres-scores"></div>
+    <div class="pres-total-box">
+      <div class="pres-total-label">AI评测总分</div>
+      <div class="pres-total-val" id="pres-total">0</div>
+      <div class="pres-total-max" id="pres-total-max">/ 80</div>
+    </div>
+    <div class="pres-comment" id="pres-comment">AI评测评语</div>
+  </div>
+  <div class="pres-progress" id="pres-progress"></div>
+</div>
+
+<script>
+// ==================== STATE ====================
+var STORAGE_KEY = 'ai_contest_eval_v9_final';
+var AI_DIM_COUNT = 3; // first 3 dimensions are AI-scored
+
+var state = {
+  config: {
+    dimensions: [
+      { name: '业务价值', max: 30, criteria: '痛点真实性、影响面、解决效果、成本/工时节约/效率等提升幅度' },
+      { name: '技术创新', max: 25, criteria: 'AI应用深度、方案巧妙程度、技术难度' },
+      { name: '落地性', max: 25, criteria: '实际数据验证、稳定性、已产生的价值' },
+      { name: '展示表达', max: 10, criteria: '逻辑清晰、时间控制、Demo质量' },
+      { name: '推广潜力', max: 10, criteria: '可复制性、拓展空间、投入产出比清晰度' }
+    ],
+    works: [
+      { id:'w_p11', team:'个人赛', name:'之柚-我的CP换了么', judgeGroup:'A', description:'AI主要用于开发阶段，运行时仅FAQ关键词匹配和MRD维度检查，应用深度较浅，但Demo平台已实际运行（12任务/4分站/40%进度）', link:'https://alidocs.dingtalk.com/i/nodes/P7QG4Yx2Jpx4OolYCglqroOLJ9dEq3XD', aiScores:[16,11,17,0,0] },
+      { id:'w_p08', team:'个人赛', name:'严蕾-轨迹智能映射辅助工具', judgeGroup:'B', description:'RAG+语义匹配方案有一定技术深度，90%+提效数据有测算依据，Demo系统已上线运行（5个功能tab/物流生命周期流程图）', link:'https://alidocs.dingtalk.com/i/nodes/ZX6GRezwJlzeYoPLFrM0Dyo9WdqbropQ', aiScores:[17,16,15,0,0] },
+      { id:'w_t08', team:'团队赛', name:'揽收异常智能稽核系统', judgeGroup:'C', description:'多模态AI识别+规则引擎+自动化编排，AI应用深度最强，有实际报告产出，但量化效果数据未以文字呈现', link:'https://alidocs.dingtalk.com/i/nodes/dpYLaezmVNRMGX56CG5GZKy9VrMqPxX6', aiScores:[25,20,16,0,0] },
+      { id:'w_t05', team:'团队赛', name:'技能大赛平台', judgeGroup:'D', description:'量化数据扎实、Demo平台完成度高（游戏化登峰计划/4阶段关卡/像素风UI），但AI应用仅限出题生成，整体偏线上化工程而非AI深度创新', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2p2gEAo8n4qY5Pr', aiScores:[26,16,19,0,0] },
+      { id:'w_t09', team:'团队赛', name:'预提Skill', judgeGroup:'A', description:'痛点聚焦但影响面窄，以规则驱动为主AI深度不足，完成度仅70%且自动化闭环尚未打通', link:'https://alidocs.dingtalk.com/i/nodes/6LeBq413JA9BOdm2irLrvx29JDOnGvpb', aiScores:[16,12,10,0,0] },
+      { id:'w_t04', team:'团队赛', name:'全链路运营智能数字助理', judgeGroup:'B', description:'五大场景均有量化提效数据且已实际运行，但核心技术偏RPA脚本自动化，AI推理深度有限', link:'https://alidocs.dingtalk.com/i/nodes/YMyQA2dXW7gYo6Mzc535ExKRWzlwrZgb', aiScores:[22,14,18,0,0] },
+      { id:'w_p06', team:'个人赛', name:'曾丽娥-客户批量查件', judgeGroup:'C', description:'基于AI Skill的7步决策链实现多数据源批量查件，实测9758条覆盖率100%，效率提升50%，但影响面有限且AI深度偏规则驱动', link:'https://alidocs.dingtalk.com/i/nodes/o14dA3GK8gQlkoYwcK2E417pV9ekBD76', aiScores:[20,15,20,0,0] },
+      { id:'w_t03', team:'团队赛', name:'航空货运智能组板装载率可视化系统', judgeGroup:'D', description:'AI算法结合3D可视化解决航空组板NP-hard问题，Demo已确认可用（3D预览/13种板型/三步引导），判断时间减少88%、装载率提升10%', link:'https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUKoKZnKA8xEKBD6p', aiScores:[26,22,19,0,0] },
+      { id:'w_t01', team:'团队赛', name:'AI定价仿真测算系统', judgeGroup:'B', description:'定价全链路仿真系统化程度高，损益差异率0.5%验证扎实，但AI应用深度较浅，核心偏业务系统数字化而非AI驱动创新', link:'https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxnxYMeMJKMEvZBY', aiScores:[24,14,22,0,0] },
+      { id:'w_p09', team:'个人赛', name:'李锦云-渠道后线客服配置Skills', judgeGroup:'A', description:'痛点真实但影响面窄，单渠道效率未提升，缺乏实际使用数据，本质为RPA+AI意图解析', link:'https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUKoq4oDy8xEKBD6p', aiScores:[13,11,10,0,0] },
+      { id:'w_t06', team:'团队赛', name:'采购决策及自动化提单AI助手', judgeGroup:'C', description:'百亿级业务场景，三层AI架构成熟，4重硬校验反幻觉，试点2天8个真实立项近3亿获批0返工，数据扎实', link:'https://alidocs.dingtalk.com/i/nodes/ZgpG2NdyVXRmQ0jgCGeG3be98MwvDqPk', aiScores:[27,22,21,0,0] },
+      { id:'w_p05', team:'个人赛', name:'刘颜齐-工单自动化判责', judgeGroup:'D', description:'场景真实且已上线，但AI执行成功率仅55.8%，限流瓶颈未解决，AI应用深度偏规则编排，预计仅省0.8人力', link:'https://alidocs.dingtalk.com/i/nodes/a9E05BDRVQRkezKGCyePxMR0J63zgkYA', aiScores:[16,13,12,0,0] },
+      { id:'w_p12', team:'个人赛', name:'杨林芝-质量数据分析模型Agent', judgeGroup:'A', description:'母子Agent架构实现16项指标自动巡检，AI应用深度最强，效率提升24倍有量化支撑，但一期仅上线2项指标，落地覆盖待扩展', link:'https://alidocs.dingtalk.com/i/nodes/Gl6Pm2Db8DMGQKRat9Kgqv3pWxLq0Ee4', aiScores:[25,23,18,0,0] },
+      { id:'w_p03', team:'个人赛', name:'应凯儿-平台客户健康度诊断工具', judgeGroup:'B', description:'工程完成度高、模块齐全且有在线Demo，但本质为传统BI工具，缺乏LLM/Agent等AI能力，在AI大赛中技术创新维度明显不足', link:'https://alidocs.dingtalk.com/i/nodes/ZX6GRezwJlzeYoPLFrM0AApaWdqbropQ', aiScores:[22,13,22,0,0] },
+      { id:'w_p01', team:'个人赛', name:'肖翠苹-包裹计费核销后落欠费格口异常智能监控', judgeGroup:'C', description:'方案为FBI+ChatBI基础应用，无Agent或多步推理，AI深度最浅；业务价值缺乏量化数据支撑，效果仅为预估，落地验证不充分', link:'https://alidocs.dingtalk.com/i/nodes/a9E05BDRVQRkezKGCyePvAXpJ63zgkYA', aiScores:[14,8,12,0,0] },
+      { id:'w_p02', team:'个人赛', name:'王亮-智能数据治理平台', judgeGroup:'D', description:'Agent架构（21工具+三层编排+ReAct推理）技术深度突出，效率量化覆盖7个场景但为估算值而非生产实测，部分核心功能仍在路线图中', link:'https://alidocs.dingtalk.com/i/nodes/Y1OQX0akWmzdBowLFvqjnA2gVGlDd3mE', aiScores:[24,22,18,0,0] },
+      { id:'w_p04', team:'个人赛', name:'王皓天-航空物流部ChatBI机器人', judgeGroup:'A', description:'Agent+持久记忆+反馈学习闭环展现了扎实的技术深度和系统可进化性，但影响面局限于单团队周报场景，量化规模偏小', link:'https://alidocs.dingtalk.com/i/nodes/KGZLxjv9VGkoG9YwH1pZGqGOV6EDybno', aiScores:[17,19,16,0,0] },
+      { id:'w_p07', team:'个人赛', name:'黄雄-成本差异归因分析自动化', judgeGroup:'B', description:'已投产4周验证了落地性，但AI主要用于编码辅助和话术生成而非Agent级推理，20-30%提效幅度有限', link:'https://alidocs.dingtalk.com/i/nodes/lyQod3RxJKe9QjOMi4Bl5jymWkb4Mw9r', aiScores:[16,14,16,0,0] },
+      { id:'w_t07', team:'团队赛', name:'晚必赔AI运营协同方案', judgeGroup:'C', description:'异构工具编排(ChatBI+浏览器自动化+MCP)解决两大运营痛点，日均节省5人时已量化验证，并推广至欧洲团队复用', link:'https://alidocs.dingtalk.com/i/nodes/N7dx2rn0JbxOaqnAC2l25epxWMGjLRb3', aiScores:[25,21,21,0,0] },
+      { id:'w_p10', team:'个人赛', name:'汪剑峰-听Q鉴宝', judgeGroup:'D', description:'多维用户评估体系设计精巧，已上架菜鸟Skills市场（RFM分层+生命周期判断），单次查询从30分钟降至20秒，但场景聚焦于低频赔付评估', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2pLPqNq8n4qY5Pr', aiScores:[22,20,19,0,0] },
+      { id:'w_t02', team:'团队赛', name:'跨境人人都是科学家', judgeGroup:'B', description:'RAG+Agent数据查询助手架构合理但偏标准化，业务价值缺乏量化数据，作品完成度仅80%且无效果验证指标', link:'https://alidocs.dingtalk.com/i/nodes/qnYMoO1rWxrkmoj2Ize9wzqyJ47Z3je9', aiScores:[15,16,13,0,0] }
+    ],
+    judgeGroups: {
+      'A': { name: 'A组', members: ['多马', '闵敏'] },
+      'B': { name: 'B组', members: ['西陌', '马远'] },
+      'C': { name: 'C组', members: ['雾非', '张媞'] },
+      'D': { name: 'D组', members: ['存思'] }
+    }
+  },
+  judgeScores: {
+    "西陌": {
+      "w_t04": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_t01": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_t06": { scores: [90, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_p08": { scores: [49, 0, 0, 0, 0], comment: '' },
+      "w_p07": { scores: [68, 0, 0, 0, 0], comment: '' },
+      "w_t02": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p03": { scores: [55, 0, 0, 0, 0], comment: '' }
+    },
+    "张媞": {
+      "w_t06": { scores: [96, 0, 0, 0, 0], comment: '' },
+      "w_t07": { scores: [95, 0, 0, 0, 0], comment: '' },
+      "w_t08": { scores: [94, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p01": { scores: [32, 0, 0, 0, 0], comment: '' }
+    },
+    "雾非": {
+      "w_t06": { scores: [83, 0, 0, 0, 0], comment: '' },
+      "w_t07": { scores: [78, 0, 0, 0, 0], comment: '' },
+      "w_t08": { scores: [77, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [74, 0, 0, 0, 0], comment: '' },
+      "w_p01": { scores: [54, 0, 0, 0, 0], comment: '' }
+    },
+    "闵敏": {
+      "w_p12": { scores: [83, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [74, 0, 0, 0, 0], comment: '' },
+      "w_p11": { scores: [66, 0, 0, 0, 0], comment: '' },
+      "w_t09": { scores: [52, 0, 0, 0, 0], comment: '' },
+      "w_p09": { scores: [51, 0, 0, 0, 0], comment: '' }
+    },
+    "存思": {
+      "w_t03": { scores: [82, 0, 0, 0, 0], comment: '' },
+      "w_p02": { scores: [75, 0, 0, 0, 0], comment: '' },
+      "w_t05": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p05": { scores: [52, 0, 0, 0, 0], comment: '' },
+      "w_p10": { scores: [50, 0, 0, 0, 0], comment: '' }
+    },
+    "多马": {
+      "w_p12": { scores: [72, 0, 0, 0, 0], comment: '' },
+      "w_p11": { scores: [69, 0, 0, 0, 0], comment: '' },
+      "w_t09": { scores: [59, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [58, 0, 0, 0, 0], comment: '' },
+      "w_p09": { scores: [46, 0, 0, 0, 0], comment: '' }
+    },
+    "马远": {
+      "w_t02": { scores: [90, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [75, 0, 0, 0, 0], comment: '' },
+      "w_p08": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [69, 0, 0, 0, 0], comment: '' },
+      "w_t04": { scores: [65, 0, 0, 0, 0], comment: '' },
+      "w_p03": { scores: [60, 0, 0, 0, 0], comment: '' }
+    }
+  },
+  currentJudge: '',
+  currentJudgeGroup: '',
+  currentView: 'admin',
+  scoringWorkIndex: -1
+};
+
+// ==================== PERSISTENCE ====================
+function loadData() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var data = JSON.parse(saved);
+      if (data.judgeScores && Object.keys(data.judgeScores).length > 0) state.judgeScores = data.judgeScores;
+      if (data.currentJudge) state.currentJudge = data.currentJudge;
+      if (data.currentJudgeGroup) state.currentJudgeGroup = data.currentJudgeGroup;
+    }
+  } catch(e) { console.error('Load error:', e); }
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      config: state.config,
+      judgeScores: state.judgeScores,
+      currentJudge: state.currentJudge,
+      currentJudgeGroup: state.currentJudgeGroup
+    }));
+  } catch(e) { console.error('Save error:', e); }
+}
+
+// ==================== HELPERS ====================
+var GROUP_COLORS = { 'A': '#2563eb', 'B': '#16a34a', 'C': '#d97706', 'D': '#dc2626' };
+
+function getGroupBadge(work) {
+  var g = work.judgeGroup;
+  if (!g) return '';
+  var grp = state.config.judgeGroups && state.config.judgeGroups[g];
+  var label = grp ? grp.name : g + '组';
+  var color = GROUP_COLORS[g] || '#6b7280';
+  var members = grp ? grp.members.join('、') : '';
+  return '<span style="display:inline-block; background:' + color + '; color:#fff; font-size:11px; padding:1px 8px; border-radius:10px; margin-left:6px; font-weight:600" title="' + escHtml(label + '：' + members) + '">' + escHtml(label) + '</span>';
+}
+
+function getFilteredWorks() {
+  var group = state.currentJudgeGroup;
+  if (!group) return state.config.works;
+  return state.config.works.filter(function(w) { return w.judgeGroup === group; });
+}
+
+function getAITotal(work) {
+  if (!work.aiScores) return 0;
+  var sum = 0;
+  for (var i = 0; i < AI_DIM_COUNT && i < work.aiScores.length; i++) {
+    sum += (work.aiScores[i] || 0);
+  }
+  return sum;
+}
+
+function getAIMax() {
+  var sum = 0;
+  for (var i = 0; i < AI_DIM_COUNT && i < state.config.dimensions.length; i++) {
+    sum += (state.config.dimensions[i].max || 0);
+  }
+  return sum;
+}
+
+function getHumanMax() {
+  var sum = 0;
+  for (var i = 0; i < state.config.dimensions.length; i++) {
+    sum += (state.config.dimensions[i].max || 0);
+  }
+  return sum;
+}
+
+function getTotalMax() {
+  return getHumanMax();
+}
+
+function getJudgeWorkTotal(workId) {
+  var j = state.judgeScores[state.currentJudge];
+  if (!j || !j[workId]) return 0;
+  var scores = j[workId].scores || [];
+  var sum = 0;
+  for (var i = 0; i < scores.length; i++) {
+    sum += (scores[i] || 0);
+  }
+  return sum;
+}
+
+function isWorkScored(workId) {
+  var j = state.judgeScores[state.currentJudge];
+  if (!j || !j[workId]) return false;
+  var scores = j[workId].scores || [];
+  for (var i = 0; i < scores.length; i++) {
+    if (scores[i] > 0) return true;
+  }
+  return false;
+}
+
+function getScoredCount() {
+  var j = state.judgeScores[state.currentJudge];
+  if (!j) return 0;
+  var count = 0;
+  for (var wid in j) {
+    var scores = j[wid].scores || [];
+    for (var i = 0; i < scores.length; i++) {
+      if (scores[i] > 0) { count++; break; }
+    }
+  }
+  return count;
+}
+
+function getJudgeCount() {
+  return Object.keys(state.judgeScores).length;
+}
+
+function genId() {
+  return 'w_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+}
+
+function formatDate() {
+  var d = new Date();
+  return d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+}
+
+function showToast(msg, type) {
+  type = type || 'success';
+  var container = document.getElementById('toast-container');
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 2500);
+}
+
+function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+function downloadJSON(data, filename) {
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadFile(content, filename, mimeType) {
+  var blob = new Blob([content], { type: mimeType || 'text/plain' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ==================== VIEW SWITCHING ====================
+function switchView(view) {
+  state.currentView = view;
+  document.getElementById('view-admin').classList.toggle('hidden', view !== 'admin');
+  document.getElementById('view-judge').classList.toggle('hidden', view !== 'judge');
+  document.getElementById('view-dashboard').classList.toggle('hidden', view !== 'dashboard');
+  document.getElementById('tab-admin').classList.toggle('active', view === 'admin');
+  document.getElementById('tab-judge').classList.toggle('active', view === 'judge');
+  document.getElementById('tab-dashboard').classList.toggle('active', view === 'dashboard');
+  if (view === 'admin') renderAdmin();
+  if (view === 'judge') renderJudge();
+  if (view === 'dashboard') renderDashboard();
+}
+
+// ==================== ADMIN RENDERING ====================
+function renderAdmin() {
+  renderAdminStats();
+  renderDimensions();
+  renderWorksList();
+  renderAIScoreTable();
+  updateWeightDisplay();
+}
+
+function updateWeightDisplay() {
+  var dims = state.config.dimensions;
+  var aiDims = dims.slice(0, AI_DIM_COUNT);
+  document.getElementById('ai-max-display').textContent = getAIMax() + '分';
+  document.getElementById('ai-dims-display').textContent = aiDims.map(function(d){ return d.name + d.max; }).join(' + ');
+  document.getElementById('human-max-display').textContent = getHumanMax() + '分';
+  document.getElementById('human-dims-display').textContent = dims.map(function(d){ return d.name + d.max; }).join(' + ');
+}
+
+function renderAdminStats() {
+  var html = '';
+  html += '<div class="stat-card"><div class="stat-value">' + state.config.works.length + '</div><div class="stat-label">参赛作品</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">' + state.config.dimensions.length + '</div><div class="stat-label">评分维度</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">' + getHumanMax() + '</div><div class="stat-label">评委满分</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">' + getJudgeCount() + '</div><div class="stat-label">评委人数</div></div>';
+  document.getElementById('admin-stats').innerHTML = html;
+}
+
+function renderDimensions() {
+  var html = '';
+  state.config.dimensions.forEach(function(dim, i) {
+    var tag = i < AI_DIM_COUNT
+      ? '<span class="badge badge-primary" style="margin-right:4px;font-size:11px">AI评测</span><span class="badge badge-success" style="margin-right:8px;font-size:11px">评委打分</span>'
+      : '<span class="badge badge-success" style="margin-right:8px;font-size:11px">评委打分</span>';
+    var criteriaHtml = dim.criteria ? '<div style="font-size:12px; color:#6b7280; margin-top:4px; padding-left:4px;">💡 ' + escHtml(dim.criteria) + '</div>' : '';
+    html += '<div class="dim-row" style="flex-wrap:wrap">' + tag +
+      '<input class="form-input" value="' + escHtml(dim.name) + '" onchange="updateDim(' + i + ',\'name\',this.value)" placeholder="维度名称">' +
+      '<input class="form-input small" type="number" value="' + dim.max + '" min="1" max="100" onchange="updateDim(' + i + ',\'max\',parseInt(this.value))" placeholder="满分">' +
+      '<span style="font-size:12px; color:var(--text-light)">分</span>' +
+      '<button class="btn-icon" onclick="removeDimension(' + i + ')" title="删除" style="color:var(--danger)">×</button>' +
+      '</div>' + criteriaHtml;
+  });
+  document.getElementById('dimensions-list').innerHTML = html;
+}
+
+function renderWorksList() {
+  document.getElementById('works-count').textContent = state.config.works.length;
+  var html = '';
+  state.config.works.forEach(function(work, i) {
+    html += '<div class="dim-row" style="flex-wrap:wrap">' +
+      '<span style="font-size:12px; font-weight:700; color:var(--primary); min-width:24px;">#' + (i+1) + '</span>' +
+      getGroupBadge(work) +
+      '<input class="form-input" value="' + escHtml(work.team) + '" placeholder="团队/选手" style="max-width:120px" onchange="updateWork(' + i + ',\'team\',this.value)">' +
+      '<input class="form-input" value="' + escHtml(work.name) + '" placeholder="作品名称" style="flex:2" onchange="updateWork(' + i + ',\'name\',this.value)">' +
+      '<button class="btn-icon" onclick="editWork(' + i + ')" title="编辑简介">📝</button>' +
+      '<button class="btn-icon" onclick="removeWork(' + i + ')" title="删除" style="color:var(--danger)">×</button>' +
+      '</div>';
+  });
+  document.getElementById('works-list').innerHTML = html;
+}
+
+function renderAIScoreTable() {
+  var dims = state.config.dimensions.slice(0, AI_DIM_COUNT);
+  var headerHtml = '<th style="width:40px">#</th><th>作品</th>';
+  dims.forEach(function(d) {
+    var tip = d.criteria ? ' title="' + escHtml(d.criteria) + '" style="text-align:center; cursor:help"' : ' style="text-align:center"';
+    headerHtml += '<th' + tip + '>' + escHtml(d.name) + '<br><span style="font-weight:400; font-size:11px">(满分' + d.max + ')</span>' +
+      (d.criteria ? '<br><span style="font-weight:400; font-size:10px; color:#6b7280">' + escHtml(d.criteria) + '</span>' : '') + '</th>';
+  });
+  headerHtml += '<th style="text-align:center">AI总分</th>';
+  document.getElementById('ai-score-header').innerHTML = headerHtml;
+
+  var bodyHtml = '';
+  state.config.works.forEach(function(work, i) {
+    bodyHtml += '<tr><td style="font-weight:700; color:var(--primary)">' + (i+1) + '</td>';
+    bodyHtml += '<td><div style="font-weight:600">' + escHtml(work.name) + getGroupBadge(work) + '</div><div style="font-size:12px; color:var(--text-light)">' + escHtml(work.team) + '</div></td>';
+    for (var di = 0; di < AI_DIM_COUNT; di++) {
+      var val = (work.aiScores && work.aiScores[di] !== undefined) ? work.aiScores[di] : 0;
+      bodyHtml += '<td style="text-align:center"><input type="number" min="0" max="' + (dims[di]?dims[di].max:30) + '" value="' + val + '" ' +
+        'style="width:60px; text-align:center; padding:6px; border:1.5px solid var(--border); border-radius:6px; font-size:14px; font-weight:600" ' +
+        'onchange="updateAIScore(' + i + ',' + di + ',parseInt(this.value)||0)"></td>';
+    }
+    bodyHtml += '<td style="text-align:center; font-weight:700; color:var(--primary); font-size:16px">' + getAITotal(work) + '</td></tr>';
+  });
+  document.getElementById('ai-score-body').innerHTML = bodyHtml;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ==================== ADMIN ACTIONS ====================
+function addDimension() {
+  state.config.dimensions.push({ name: '', max: 10, criteria: '' });
+  state.config.works.forEach(function(w) { w.aiScores.push(0); });
+  saveData(); renderAdmin();
+}
+
+function removeDimension(i) {
+  if (!confirm('确定删除该维度？相关分数也将被删除。')) return;
+  state.config.dimensions.splice(i, 1);
+  state.config.works.forEach(function(w) { w.aiScores.splice(i, 1); });
+  if (i < AI_DIM_COUNT) AI_DIM_COUNT = Math.max(0, AI_DIM_COUNT - 1);
+  saveData(); renderAdmin();
+}
+
+function updateDim(i, key, val) {
+  state.config.dimensions[i][key] = val;
+  saveData(); renderAdmin();
+}
+
+function addWork() {
+  var scores = [];
+  for (var i = 0; i < state.config.dimensions.length; i++) scores.push(0);
+  state.config.works.push({ id: genId(), team: '', name: '', description: '', link: '', aiScores: scores });
+  saveData(); renderAdmin();
+}
+
+function removeWork(i) {
+  if (!confirm('确定删除该作品？')) return;
+  state.config.works.splice(i, 1);
+  saveData(); renderAdmin();
+}
+
+function updateWork(i, key, val) {
+  state.config.works[i][key] = val;
+  saveData();
+}
+
+function editWork(i) {
+  var work = state.config.works[i];
+  document.getElementById('edit-work-index').value = i;
+  document.getElementById('edit-work-name').value = work.name || '';
+  document.getElementById('edit-work-team').value = work.team || '';
+  document.getElementById('edit-work-desc').value = work.description || '';
+  document.getElementById('edit-work-link').value = work.link || '';
+  showModal('modal-edit-work');
+}
+
+function saveEditWork() {
+  var i = parseInt(document.getElementById('edit-work-index').value);
+  state.config.works[i].name = document.getElementById('edit-work-name').value;
+  state.config.works[i].team = document.getElementById('edit-work-team').value;
+  state.config.works[i].description = document.getElementById('edit-work-desc').value;
+  state.config.works[i].link = document.getElementById('edit-work-link').value;
+  hideModal('modal-edit-work');
+  saveData(); renderAdmin();
+}
+
+function doImportWorks() {
+  var text = document.getElementById('import-works-text').value.trim();
+  if (!text) return;
+  var lines = text.split('\n');
+  var count = 0;
+  lines.forEach(function(line) {
+    line = line.trim();
+    if (!line) return;
+    var parts = line.split('|').map(function(s){ return s.trim(); });
+    if (parts.length >= 2) {
+      var scores = [];
+      for (var i = 0; i < state.config.dimensions.length; i++) scores.push(0);
+      state.config.works.push({
+        id: genId(), team: parts[0], name: parts[1],
+        description: parts[2] || '', link: parts[3] || '',
+        aiScores: scores
+      });
+      count++;
+    }
+  });
+  document.getElementById('import-works-text').value = '';
+  hideModal('modal-import-works');
+  showToast('成功导入 ' + count + ' 个作品');
+  saveData(); renderAdmin();
+}
+
+function updateAIScore(workIdx, dimIdx, val) {
+  var dim = state.config.dimensions[dimIdx];
+  if (dim) val = Math.max(0, Math.min(val || 0, dim.max));
+  state.config.works[workIdx].aiScores[dimIdx] = val;
+  saveData();
+  // Update total display
+  var cells = document.getElementById('ai-score-body').children;
+  if (cells[workIdx]) {
+    var lastTd = cells[workIdx].lastElementChild;
+    if (lastTd) lastTd.textContent = getAITotal(state.config.works[workIdx]);
+  }
+  renderAdminStats();
+}
+
+function doBatchAI() {
+  var text = document.getElementById('batch-ai-text').value.trim();
+  if (!text) return;
+  var lines = text.split('\n');
+  var count = 0;
+  lines.forEach(function(line) {
+    line = line.trim();
+    if (!line) return;
+    var parts = line.split('|').map(function(s){ return s.trim(); });
+    if (parts.length >= 2) {
+      var key = parts[0];
+      var scores = parts[1].split(',').map(function(s){ return parseInt(s.trim()) || 0; });
+      var idx = parseInt(key) - 1;
+      var work = null;
+      if (!isNaN(idx) && idx >= 0 && idx < state.config.works.length) {
+        work = state.config.works[idx];
+      } else {
+        for (var i = 0; i < state.config.works.length; i++) {
+          if (state.config.works[i].name.indexOf(key) >= 0 || key.indexOf(state.config.works[i].name) >= 0) {
+            work = state.config.works[i]; break;
+          }
+        }
+      }
+      if (work) {
+        for (var j = 0; j < scores.length && j < AI_DIM_COUNT; j++) {
+          var dim = state.config.dimensions[j];
+          var val = dim ? Math.max(0, Math.min(scores[j] || 0, dim.max)) : (scores[j] || 0);
+          work.aiScores[j] = val;
+        }
+        count++;
+      }
+    }
+  });
+  document.getElementById('batch-ai-text').value = '';
+  hideModal('modal-batch-ai');
+  showToast('成功录入 ' + count + ' 个作品的AI评分');
+  saveData(); renderAdmin();
+}
+
+// ==================== DATA MANAGEMENT ====================
+function exportAll() {
+  var data = { config: state.config, judgeScores: state.judgeScores, exportTime: new Date().toISOString() };
+  downloadJSON(data, '评测数据_' + formatDate() + '.json');
+  showToast('数据已导出');
+}
+
+function handleFileImport(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (data.config) state.config = data.config;
+      if (data.judgeScores) state.judgeScores = data.judgeScores;
+      showToast('数据导入成功');
+      saveData(); renderAdmin();
+    } catch(err) { showToast('文件解析失败', 'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function exportResults() {
+  var ranking = computeRanking();
+  if (ranking.length === 0) { showToast('暂无成绩数据', 'error'); return; }
+  var dims = state.config.dimensions;
+  var csv = '\uFEFF';
+  var header = '排名,作品名称,团队/选手,赛道,评委分组,AI评分(满分' + getAIMax() + '),评委均分(满分' + getHumanMax() + ')';
+  dims.forEach(function(d) { header += ',' + d.name + '(均)'; });
+  header += ',最终得分(评委均分×60%+AI×40%)\n';
+  csv += header;
+  ranking.forEach(function(item, i) {
+    var grpName = item.judgeGroup ? (state.config.judgeGroups && state.config.judgeGroups[item.judgeGroup] ? state.config.judgeGroups[item.judgeGroup].name : item.judgeGroup + '组') : '';
+    var row = (i+1) + ',' + item.name + ',' + item.team + ',' + item.category + ',' + grpName;
+    row += ',' + item.aiTotal + ',' + item.judgeFullAvg.toFixed(1);
+    dims.forEach(function(d, di) {
+      row += ',' + getDimAvg(item.id, di);
+    });
+    row += ',' + item.finalScore.toFixed(1);
+    csv += row + '\n';
+  });
+  downloadFile(csv, 'AI大赛成绩_' + formatDate() + '.csv', 'text/csv;charset=utf-8');
+  showToast('成绩已导出为CSV');
+}
+
+function clearJudgeScores() {
+  if (!confirm('确定清空所有评委评分？此操作不可恢复。')) return;
+  state.judgeScores = {};
+  saveData(); renderAdmin();
+  showToast('评委评分已清空');
+}
+
+function resetAll() {
+  if (!confirm('确定重置所有数据？此操作不可恢复！')) return;
+  if (!confirm('再次确认：所有作品、评分、评委分数都将被清除。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ==================== JUDGE VIEW ====================
+function renderJudge() {
+  if (state.currentJudge) {
+    document.getElementById('judge-login').classList.add('hidden');
+    document.getElementById('judge-main').classList.remove('hidden');
+    var groupInfo = '';
+    if (state.currentJudgeGroup) {
+      var grp = state.config.judgeGroups && state.config.judgeGroups[state.currentJudgeGroup];
+      var color = GROUP_COLORS[state.currentJudgeGroup] || '#6b7280';
+      groupInfo = ' <span style="display:inline-block; background:' + color + '; color:#fff; font-size:11px; padding:1px 8px; border-radius:10px; margin-left:4px">' + (grp ? grp.name : state.currentJudgeGroup + '组') + '</span>';
+    }
+    document.getElementById('judge-name-display').innerHTML = '评委：' + escHtml(state.currentJudge) + groupInfo;
+    renderJudgeWorksGrid();
+  } else {
+    document.getElementById('judge-login').classList.remove('hidden');
+    document.getElementById('judge-main').classList.add('hidden');
+    renderGroupSelector();
+  }
+  // Close scoring panel when re-entering judge view
+  document.getElementById('judge-scoring').classList.add('hidden');
+  document.getElementById('judge-works-grid').classList.remove('hidden');
+}
+
+function renderGroupSelector() {
+  var groups = state.config.judgeGroups || {};
+  var html = '';
+  for (var key in groups) {
+    var grp = groups[key];
+    var color = GROUP_COLORS[key] || '#6b7280';
+    var active = state.currentJudgeGroup === key;
+    var style = active
+      ? 'background:' + color + '; color:#fff; border-color:' + color + ';'
+      : 'background:#fff; color:' + color + '; border:2px solid ' + color + ';';
+    html += '<button onclick="selectJudgeGroup(\'' + key + '\')" style="' + style + ' padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">' +
+      escHtml(grp.name) + '<br><span style="font-size:11px; font-weight:400">' + escHtml(grp.members.join('、')) + '</span></button>';
+  }
+  document.getElementById('judge-group-selector').innerHTML = html;
+}
+
+function selectJudgeGroup(group) {
+  state.currentJudgeGroup = state.currentJudgeGroup === group ? '' : group;
+  renderGroupSelector();
+}
+
+function enterJudge() {
+  var name = document.getElementById('judge-name-input').value.trim();
+  if (!name) return;
+  state.currentJudge = name;
+  if (!state.judgeScores[name]) {
+    state.judgeScores[name] = {};
+  }
+  saveData();
+  renderJudge();
+}
+
+function exitJudge() {
+  state.currentJudge = '';
+  document.getElementById('judge-name-input').value = '';
+  renderJudge();
+}
+
+function renderJudgeWorksGrid() {
+  var filteredWorks = getFilteredWorks();
+  var total = filteredWorks.length;
+  var scored = 0;
+  filteredWorks.forEach(function(w) { if (isWorkScored(w.id)) scored++; });
+  document.getElementById('judge-scored-count').textContent = scored;
+  document.getElementById('judge-total-count').textContent = total;
+  var pct = total > 0 ? (scored / total * 100) : 0;
+  document.getElementById('judge-progress').style.width = pct + '%';
+
+  var html = '';
+  filteredWorks.forEach(function(work) {
+    var idx = state.config.works.indexOf(work);
+    var scored = isWorkScored(work.id);
+    var aiTotal = getAITotal(work);
+    var humanTotal = getJudgeWorkTotal(work.id);
+    html += '<div class="work-card" onclick="openScoring(' + idx + ')">';
+    html += '<div style="display:flex; justify-content:space-between; align-items:start">';
+    html += '<span class="work-num">#' + (idx+1) + ' ' + escHtml(work.team) + ' ' + getGroupBadge(work) + '</span>';
+    html += scored ? '<span class="badge badge-success">✓ 已评分</span>' : '<span class="badge badge-warning">待评分</span>';
+    html += '</div>';
+    html += '<div class="work-name">' + escHtml(work.name) + '</div>';
+    html += '<div class="work-desc">' + escHtml(work.description || '暂无简介') + '</div>';
+    html += '<div class="work-scores">';
+    if (aiTotal > 0) html += '<span class="score-tag ai">AI ' + aiTotal + '/' + getAIMax() + '</span>';
+    if (scored) html += '<span class="score-tag total">评委 ' + humanTotal + '/' + getTotalMax() + '</span>';
+    html += '</div></div>';
+  });
+  document.getElementById('judge-works-grid').innerHTML = html;
+}
+
+function openScoring(idx) {
+  state.scoringWorkIndex = idx;
+  var work = state.config.works[idx];
+  if (!work) return;
+
+  // Initialize scores if needed
+  if (!state.judgeScores[state.currentJudge]) state.judgeScores[state.currentJudge] = {};
+  if (!state.judgeScores[state.currentJudge][work.id]) {
+    var scores = [];
+    for (var i = 0; i < state.config.dimensions.length; i++) scores.push(0);
+    state.judgeScores[state.currentJudge][work.id] = { scores: scores, comment: '' };
+  }
+
+  // Hide grid, show scoring
+  document.getElementById('judge-works-grid').classList.add('hidden');
+  document.getElementById('judge-scoring').classList.remove('hidden');
+
+  // Fill in work info
+  document.getElementById('scoring-work-name').textContent = work.name;
+  document.getElementById('scoring-work-team').textContent = work.team;
+  document.getElementById('scoring-work-desc').textContent = work.description || '暂无简介';
+  var linkEl = document.getElementById('scoring-work-link');
+  if (work.link) {
+    linkEl.innerHTML = '<a href="' + escHtml(work.link) + '" target="_blank">📎 查看作品文档 →</a>';
+  } else {
+    linkEl.innerHTML = '';
+  }
+
+  // AI reference scores
+  var aiTotal = getAITotal(work);
+  var aiRefHtml = '🤖 <b>AI评测参考分（满分' + getAIMax() + '）：</b> ';
+  for (var i = 0; i < AI_DIM_COUNT; i++) {
+    var dim = state.config.dimensions[i];
+    if (dim) {
+      if (i > 0) aiRefHtml += ' | ';
+      aiRefHtml += dim.name + ' <b>' + (work.aiScores[i] || 0) + '</b>/' + dim.max;
+    }
+  }
+  aiRefHtml += ' (小计 <b>' + aiTotal + '</b>/' + getAIMax() + ')';
+  document.getElementById('scoring-ai-ref').innerHTML = aiRefHtml;
+
+  // Render scoring dimensions (all 5 dims for judges)
+  var dimsHtml = '';
+  state.config.dimensions.forEach(function(dim, di) {
+    var val = state.judgeScores[state.currentJudge][work.id].scores[di] || 0;
+    var isAIDim = di < AI_DIM_COUNT;
+    var dimTag = isAIDim
+      ? '<span class="badge badge-primary" style="font-size:10px; padding:2px 6px; margin-right:4px">AI已评</span><span class="badge badge-success" style="font-size:10px; padding:2px 6px; margin-right:4px">评委打分</span>'
+      : '<span class="badge badge-success" style="font-size:10px; padding:2px 6px; margin-right:4px">评委打分</span>';
+    var criteriaHtml = dim.criteria ? '<div style="font-size:12px; color:#6b7280; margin-bottom:6px; line-height:1.5;">💡 打分要点：' + escHtml(dim.criteria) + '</div>' : '';
+    dimsHtml += '<div class="score-input-group" style="margin-bottom:12px; padding:10px; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px">' +
+      '<span class="dim-name" style="font-weight:600; font-size:14px">' + dimTag + escHtml(dim.name) + '</span>' +
+      '<span class="dim-max" style="font-size:13px; color:#6b7280">/ ' + dim.max + '分</span></div>' +
+      criteriaHtml +
+      '<div style="display:flex; align-items:center; gap:10px">' +
+      '<input type="range" class="score-slider" min="0" max="' + dim.max + '" step="1" value="' + val + '" style="flex:1" ' +
+      'oninput="setJudgeScore(' + di + ', parseInt(this.value))">' +
+      '<input type="number" class="score-value" min="0" max="' + dim.max + '" value="' + val + '" style="width:60px" ' +
+      'onchange="setJudgeScore(' + di + ', parseInt(this.value)||0)">' +
+      '</div></div>';
+  });
+  document.getElementById('scoring-dims').innerHTML = dimsHtml;
+
+  // Comment
+  document.getElementById('scoring-comment').value = state.judgeScores[state.currentJudge][work.id].comment || '';
+
+  // Update totals
+  updateScoringTotals();
+
+  // Navigation
+  document.getElementById('work-counter').textContent = (idx + 1) + ' / ' + state.config.works.length;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === state.config.works.length - 1;
+}
+
+function setJudgeScore(dimIdx, val) {
+  var work = state.config.works[state.scoringWorkIndex];
+  if (!work) return;
+  var dim = state.config.dimensions[dimIdx];
+  if (dim) val = Math.max(0, Math.min(val || 0, dim.max));
+
+  var judgeData = state.judgeScores[state.currentJudge][work.id];
+  judgeData.scores[dimIdx] = val;
+
+  // Sync slider and input
+  var sliders = document.getElementById('scoring-dims').querySelectorAll('.score-input-group');
+  if (sliders[dimIdx]) {
+    sliders[dimIdx].querySelector('.score-slider').value = val;
+    sliders[dimIdx].querySelector('.score-value').value = val;
+  }
+
+  saveData();
+  updateScoringTotals();
+}
+
+function updateScoringTotals() {
+  var work = state.config.works[state.scoringWorkIndex];
+  if (!work) return;
+  var judgeTotal = getJudgeWorkTotal(work.id);
+  document.getElementById('scoring-total').textContent = judgeTotal;
+  var aiTotal = getAITotal(work);
+  document.getElementById('scoring-combined').innerHTML =
+    '评委5维度总分 ' + judgeTotal + '/' + getHumanMax() + '<br>' +
+    '<span style="font-size:12px">最终得分 = 评委均分(' + judgeTotal + '/' + getHumanMax() + ') &times; 60% + AI分(' + aiTotal + '/' + getAIMax() + ') &times; 40%</span>';
+}
+
+function closeScoring() {
+  // Save comment
+  var work = state.config.works[state.scoringWorkIndex];
+  if (work && state.judgeScores[state.currentJudge] && state.judgeScores[state.currentJudge][work.id]) {
+    state.judgeScores[state.currentJudge][work.id].comment = document.getElementById('scoring-comment').value;
+  }
+  saveData();
+  document.getElementById('judge-scoring').classList.add('hidden');
+  document.getElementById('judge-works-grid').classList.remove('hidden');
+  renderJudgeWorksGrid();
+}
+
+function prevWork() {
+  if (state.scoringWorkIndex > 0) {
+    // Save current comment first
+    var work = state.config.works[state.scoringWorkIndex];
+    if (work && state.judgeScores[state.currentJudge] && state.judgeScores[state.currentJudge][work.id]) {
+      state.judgeScores[state.currentJudge][work.id].comment = document.getElementById('scoring-comment').value;
+    }
+    saveData();
+    openScoring(state.scoringWorkIndex - 1);
+  }
+}
+
+function nextWork() {
+  if (state.scoringWorkIndex < state.config.works.length - 1) {
+    var work = state.config.works[state.scoringWorkIndex];
+    if (work && state.judgeScores[state.currentJudge] && state.judgeScores[state.currentJudge][work.id]) {
+      state.judgeScores[state.currentJudge][work.id].comment = document.getElementById('scoring-comment').value;
+    }
+    saveData();
+    openScoring(state.scoringWorkIndex + 1);
+  }
+}
+
+function exportJudgeScores() {
+  // Save current comment if scoring
+  if (state.scoringWorkIndex >= 0) {
+    var work = state.config.works[state.scoringWorkIndex];
+    if (work && state.judgeScores[state.currentJudge] && state.judgeScores[state.currentJudge][work.id]) {
+      state.judgeScores[state.currentJudge][work.id].comment = document.getElementById('scoring-comment').value;
+    }
+  }
+  saveData();
+  var data = {
+    judge: state.currentJudge,
+    scores: state.judgeScores[state.currentJudge] || {},
+    timestamp: new Date().toISOString(),
+    works: state.config.works.map(function(w) { return { id: w.id, name: w.name, team: w.team }; })
+  };
+  downloadJSON(data, '评分_' + state.currentJudge + '_' + formatDate() + '.json');
+  showToast('评分已导出');
+}
+
+// ==================== DASHBOARD VIEW ====================
+function computeRanking() {
+  return state.config.works.map(function(work) {
+    var aiTotal = getAITotal(work);
+    var humanFull = [];   // all 5 dims per judge
+    var humanJudgeCount = 0;
+    for (var judge in state.judgeScores) {
+      if (state.judgeScores[judge][work.id]) {
+        humanJudgeCount++;
+        var scores = state.judgeScores[judge][work.id].scores || [];
+        var full = 0;
+        for (var i = 0; i < scores.length; i++) full += (scores[i] || 0);
+        humanFull.push(full);
+      }
+    }
+    var judgeFullAvg = humanFull.length > 0 ? humanFull.reduce(function(s,v){return s+v;}, 0) / humanFull.length : 0;
+    var finalScore = judgeFullAvg * 0.6 + aiTotal * 0.4;
+    return {
+      id: work.id, name: work.name, team: work.team, category: work.team,
+      judgeGroup: work.judgeGroup,
+      aiTotal: aiTotal, judgeFullAvg: judgeFullAvg,
+      humanJudgeCount: humanJudgeCount, finalScore: finalScore
+    };
+  }).filter(function(w) { return w.aiTotal > 0 || w.humanJudgeCount > 0; })
+    .sort(function(a, b) { return b.finalScore - a.finalScore; });
+}
+
+function getDimAvg(workId, dimIndex) {
+  if (dimIndex < AI_DIM_COUNT) {
+    var work = null;
+    for (var i = 0; i < state.config.works.length; i++) {
+      if (state.config.works[i].id === workId) { work = state.config.works[i]; break; }
+    }
+    if (work && work.aiScores && work.aiScores[dimIndex]) return work.aiScores[dimIndex];
+    return '-';
+  }
+  var sum = 0, count = 0;
+  for (var judge in state.judgeScores) {
+    if (state.judgeScores[judge][workId]) {
+      var scores = state.judgeScores[judge][workId].scores || [];
+      if (scores[dimIndex] !== undefined) {
+        sum += scores[dimIndex];
+        count++;
+      }
+    }
+  }
+  return count > 0 ? (sum / count).toFixed(1) : '-';
+}
+
+function renderDashboard() {
+  var ranking = computeRanking();
+  var totalWorks = state.config.works.length;
+  var judgeCount = getJudgeCount();
+
+  // Completion rate (judges score all 5 dims)
+  var totalSlots = totalWorks * judgeCount;
+  var doneSlots = 0;
+  for (var j in state.judgeScores) {
+    for (var wid in state.judgeScores[j]) {
+      var scores = state.judgeScores[j][wid].scores || [];
+      for (var i = 0; i < scores.length; i++) {
+        if (scores[i] > 0) { doneSlots++; break; }
+      }
+    }
+  }
+  var completionRate = totalSlots > 0 ? Math.round(doneSlots / totalSlots * 100) : 0;
+
+  // Stats
+  var statsHtml = '';
+  statsHtml += '<div class="stat-card"><div class="stat-value">' + totalWorks + '</div><div class="stat-label">参赛作品</div></div>';
+  statsHtml += '<div class="stat-card"><div class="stat-value">' + judgeCount + '</div><div class="stat-label">评委人数</div></div>';
+  statsHtml += '<div class="stat-card"><div class="stat-value">' + completionRate + '%</div><div class="stat-label">评分完成率</div></div>';
+  statsHtml += '<div class="stat-card"><div class="stat-value">AI ' + getAIMax() + '分</div><div class="stat-label">AI评测满分</div></div>';
+  document.getElementById('dash-stats').innerHTML = statsHtml;
+
+  // Judge progress (judges score all 5 dims)
+  var progressHtml = '';
+  for (var judge in state.judgeScores) {
+    var count = 0;
+    for (var wid in state.judgeScores[judge]) {
+      var scores = state.judgeScores[judge][wid].scores || [];
+      for (var i = 0; i < scores.length; i++) {
+        if (scores[i] > 0) { count++; break; }
+      }
+    }
+    var pct = totalWorks > 0 ? (count / totalWorks * 100) : 0;
+    progressHtml += '<div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">' +
+      '<span style="font-weight:600; min-width:80px; font-size:14px">' + escHtml(judge) + '</span>' +
+      '<div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '<span style="font-size:13px; color:var(--text-light); min-width:60px; text-align:right">' + count + '/' + totalWorks + '</span></div>';
+  }
+  document.getElementById('judge-progress-list').innerHTML = progressHtml;
+  document.getElementById('judge-progress-card').classList.toggle('hidden', judgeCount === 0);
+
+  // Ranking table
+  var dims = state.config.dimensions;
+  var headerHtml = '<th style="width:50px; text-align:center">排名</th><th>作品</th>';
+  headerHtml += '<th style="text-align:center">AI评分<br><span style="font-weight:400; font-size:11px">(满分' + getAIMax() + ')</span></th>';
+  headerHtml += '<th style="text-align:center">评委均分<br><span style="font-weight:400; font-size:11px">(满分' + getHumanMax() + ')</span></th>';
+  dims.forEach(function(d) {
+    var tip = d.criteria ? ' title="' + escHtml(d.criteria) + '"' : '';
+    headerHtml += '<th style="text-align:center; font-size:12px; cursor:help"' + tip + '>' + escHtml(d.name) + '<br><span style="font-weight:400; font-size:10px; color:#6b7280">/' + d.max + '</span></th>';
+  });
+  headerHtml += '<th style="text-align:center; font-size:14px">最终得分<br><span style="font-weight:400; font-size:10px; color:#6b7280">评委均分×60%+AI×40%</span></th>';
+  document.getElementById('rank-header').innerHTML = headerHtml;
+
+  if (ranking.length === 0) {
+    document.getElementById('rank-body').innerHTML = '';
+    document.getElementById('rank-empty').classList.remove('hidden');
+    document.getElementById('rank-table').classList.add('hidden');
+    return;
+  }
+
+  document.getElementById('rank-empty').classList.add('hidden');
+  document.getElementById('rank-table').classList.remove('hidden');
+
+  var bodyHtml = '';
+  ranking.forEach(function(item, i) {
+    var rankClass = i < 3 ? ' rank-' + (i+1) : '';
+    var medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i+1)));
+    bodyHtml += '<tr>';
+    bodyHtml += '<td class="rank-num' + rankClass + '">' + medal + '</td>';
+    bodyHtml += '<td><div style="font-weight:700">' + escHtml(item.name) + getGroupBadge(item) + '</div><div style="font-size:12px; color:var(--text-light)">' + escHtml(item.team) + '</div></td>';
+    bodyHtml += '<td style="text-align:center; font-weight:600; color:#2563eb">' + item.aiTotal + '<div style="font-size:11px; color:var(--text-light)">/ ' + getAIMax() + '</div></td>';
+    bodyHtml += '<td style="text-align:center; font-weight:600; color:#7c3aed">' + item.judgeFullAvg.toFixed(1) + '<div style="font-size:11px; color:var(--text-light)">' + item.humanJudgeCount + '位评委</div></td>';
+    dims.forEach(function(d, di) {
+      bodyHtml += '<td style="text-align:center; font-size:13px">' + getDimAvg(item.id, di) + '</td>';
+    });
+    bodyHtml += '<td style="text-align:center; font-weight:800; font-size:18px; color:var(--primary)">' + item.finalScore.toFixed(1) + '</td>';
+    bodyHtml += '</tr>';
+  });
+  document.getElementById('rank-body').innerHTML = bodyHtml;
+}
+
+function handleJudgeFileImport(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (data.judge && data.scores) {
+        state.judgeScores[data.judge] = data.scores;
+        showToast('成功导入评委「' + data.judge + '」的评分');
+        saveData();
+        if (state.currentView === 'dashboard') renderDashboard();
+        if (state.currentView === 'admin') renderAdmin();
+      } else {
+        showToast('文件格式不正确', 'error');
+      }
+    } catch(err) { showToast('文件解析失败', 'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ==================== INIT ====================
+loadData();
+renderAdmin();
+
+// Update batch AI hint
+(function() {
+  var dims = state.config.dimensions.slice(0, AI_DIM_COUNT);
+  var hint = '每行格式：作品序号或名称 | 各维度分数(逗号分隔)\n维度顺序：';
+  dims.forEach(function(d, i) { hint += d.name + '(' + d.max + '分)'; if (i < dims.length - 1) hint += ', '; });
+  document.getElementById('batch-ai-hint').textContent = hint;
+  var placeholder = '示例（共' + dims.length + '个维度）：\n';
+  placeholder += '1 | 25,20,18\n';
+  placeholder += '2 | 22,18,15\n';
+  placeholder += dims[0].name.substring(0,2) + ' | 28,22,20';
+  document.getElementById('batch-ai-text').placeholder = placeholder;
+})();
+
+// ==================== PRESENTATION MODE ====================
+var presIndex = 0;
+var presColors = ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981'];
+var groupColorMap = { 'A':'#3b82f6', 'B':'#22c55e', 'C':'#f59e0b', 'D':'#ef4444' };
+
+function openPresentation() {
+  presIndex = 0;
+  document.getElementById('pres-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderPresSlide();
+}
+
+function closePresentation() {
+  document.getElementById('pres-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function presNav(dir) {
+  var works = state.config.works;
+  presIndex = (presIndex + dir + works.length) % works.length;
+  renderPresSlide();
+}
+
+function renderPresSlide() {
+  var works = state.config.works;
+  var work = works[presIndex];
+  if (!work) return;
+
+  var dims = state.config.dimensions;
+  var groupColor = groupColorMap[work.judgeGroup] || '#6366f1';
+
+  // Badge
+  var badge = document.getElementById('pres-badge');
+  var grp = state.config.judgeGroups && state.config.judgeGroups[work.judgeGroup];
+  badge.textContent = grp ? grp.name : (work.judgeGroup + '组');
+  badge.style.background = groupColor + '33';
+  badge.style.color = groupColor;
+
+  // Info
+  document.getElementById('pres-num').textContent = '#' + (presIndex + 1);
+  document.getElementById('pres-name').textContent = work.name;
+  document.getElementById('pres-team').textContent = work.team;
+  document.getElementById('pres-counter').textContent = (presIndex + 1) + ' / ' + works.length;
+
+  // Scores
+  var scoresHtml = '';
+  var aiTotal = 0;
+  for (var i = 0; i < AI_DIM_COUNT; i++) {
+    var dim = dims[i];
+    var val = (work.aiScores && work.aiScores[i]) || 0;
+    aiTotal += val;
+    var pct = dim.max > 0 ? Math.round(val / dim.max * 100) : 0;
+    var color = pct >= 80 ? '#22c55e' : (pct >= 60 ? '#f59e0b' : '#64748b');
+    scoresHtml += '<div class="pres-score-item">';
+    scoresHtml += '<div class="pres-score-circle" style="border-color:' + color + '44; background:radial-gradient(circle, ' + color + '11 0%, transparent 70%)">';
+    scoresHtml += '<div class="pres-score-val" style="color:' + color + '">' + val + '</div>';
+    scoresHtml += '<div class="pres-score-max">/ ' + dim.max + '</div>';
+    scoresHtml += '</div>';
+    scoresHtml += '<div class="pres-dim-name">' + escHtml(dim.name) + '</div>';
+    scoresHtml += '</div>';
+  }
+  document.getElementById('pres-scores').innerHTML = scoresHtml;
+
+  // Total
+  document.getElementById('pres-total').textContent = aiTotal;
+  document.getElementById('pres-total-max').textContent = '/ ' + getAIMax();
+
+  // Comment
+  document.getElementById('pres-comment').textContent = work.description || '暂无AI评语';
+
+  // Progress bar
+  var pct = works.length > 1 ? ((presIndex) / (works.length - 1) * 100) : 0;
+  document.getElementById('pres-progress').style.width = pct + '%';
+}
+
+// Keyboard navigation for presentation mode
+document.addEventListener('keydown', function(e) {
+  var overlay = document.getElementById('pres-overlay');
+  if (!overlay.classList.contains('active')) return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { presNav(-1); e.preventDefault(); }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { presNav(1); e.preventDefault(); }
+  if (e.key === 'Escape') { closePresentation(); e.preventDefault(); }
+});
+</script>
+</body>
+</html>
