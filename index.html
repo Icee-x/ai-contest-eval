@@ -692,7 +692,6 @@ function loadData() {
     var saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       var data = JSON.parse(saved);
-      if (data.config) state.config = data.config;
       if (data.judgeScores && Object.keys(data.judgeScores).length > 0) state.judgeScores = data.judgeScores;
       if (data.currentJudge) state.currentJudge = data.currentJudge;
       if (data.currentJudgeGroup) state.currentJudgeGroup = data.currentJudgeGroup;
