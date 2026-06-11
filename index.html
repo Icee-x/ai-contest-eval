@@ -583,7 +583,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
 
 <script>
 // ==================== STATE ====================
-var STORAGE_KEY = 'ai_contest_eval_v7_demo';
+var STORAGE_KEY = 'ai_contest_eval_v8_final';
 var AI_DIM_COUNT = 3; // first 3 dimensions are AI-scored
 
 var state = {
@@ -625,7 +625,61 @@ var state = {
       'D': { name: 'D组', members: ['存思'] }
     }
   },
-  judgeScores: {},
+  judgeScores: {
+    "西陌": {
+      "w_t04": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_t01": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_t06": { scores: [90, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [73, 0, 0, 0, 0], comment: '' },
+      "w_p08": { scores: [49, 0, 0, 0, 0], comment: '' },
+      "w_p07": { scores: [68, 0, 0, 0, 0], comment: '' },
+      "w_t02": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p03": { scores: [55, 0, 0, 0, 0], comment: '' }
+    },
+    "张媞": {
+      "w_t06": { scores: [96, 0, 0, 0, 0], comment: '' },
+      "w_t07": { scores: [95, 0, 0, 0, 0], comment: '' },
+      "w_t08": { scores: [94, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p01": { scores: [32, 0, 0, 0, 0], comment: '' }
+    },
+    "雾非": {
+      "w_t06": { scores: [83, 0, 0, 0, 0], comment: '' },
+      "w_t07": { scores: [78, 0, 0, 0, 0], comment: '' },
+      "w_t08": { scores: [77, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [74, 0, 0, 0, 0], comment: '' },
+      "w_p01": { scores: [54, 0, 0, 0, 0], comment: '' }
+    },
+    "闵敏": {
+      "w_p12": { scores: [83, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [74, 0, 0, 0, 0], comment: '' },
+      "w_p11": { scores: [66, 0, 0, 0, 0], comment: '' },
+      "w_t09": { scores: [52, 0, 0, 0, 0], comment: '' },
+      "w_p09": { scores: [51, 0, 0, 0, 0], comment: '' }
+    },
+    "存思": {
+      "w_t03": { scores: [82, 0, 0, 0, 0], comment: '' },
+      "w_p02": { scores: [75, 0, 0, 0, 0], comment: '' },
+      "w_t05": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p05": { scores: [52, 0, 0, 0, 0], comment: '' },
+      "w_p10": { scores: [50, 0, 0, 0, 0], comment: '' }
+    },
+    "多马": {
+      "w_p12": { scores: [72, 0, 0, 0, 0], comment: '' },
+      "w_p11": { scores: [69, 0, 0, 0, 0], comment: '' },
+      "w_t09": { scores: [59, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [58, 0, 0, 0, 0], comment: '' },
+      "w_p09": { scores: [46, 0, 0, 0, 0], comment: '' }
+    },
+    "马远": {
+      "w_t02": { scores: [90, 0, 0, 0, 0], comment: '' },
+      "w_p06": { scores: [75, 0, 0, 0, 0], comment: '' },
+      "w_p08": { scores: [70, 0, 0, 0, 0], comment: '' },
+      "w_p04": { scores: [69, 0, 0, 0, 0], comment: '' },
+      "w_t04": { scores: [65, 0, 0, 0, 0], comment: '' },
+      "w_p03": { scores: [60, 0, 0, 0, 0], comment: '' }
+    }
+  },
   currentJudge: '',
   currentJudgeGroup: '',
   currentView: 'admin',
