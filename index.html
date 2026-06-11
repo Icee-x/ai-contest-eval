@@ -583,7 +583,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
 
 <script>
 // ==================== STATE ====================
-var STORAGE_KEY = 'ai_contest_eval_v6_review';
+var STORAGE_KEY = 'ai_contest_eval_v7_demo';
 var AI_DIM_COUNT = 3; // first 3 dimensions are AI-scored
 
 var state = {
@@ -596,14 +596,14 @@ var state = {
       { name: '推广潜力', max: 10, criteria: '可复制性、拓展空间、投入产出比清晰度' }
     ],
     works: [
-      { id:'w_p11', team:'个人赛', name:'之柚-我的CP换了么', judgeGroup:'A', description:'AI主要用于开发阶段，运行时仅FAQ关键词匹配和MRD维度检查，应用深度较浅，部分效果指标仍在观测中', link:'https://alidocs.dingtalk.com/i/nodes/P7QG4Yx2Jpx4OolYCglqroOLJ9dEq3XD', aiScores:[16,11,15,0,0] },
-      { id:'w_p08', team:'个人赛', name:'严蕾-轨迹智能映射辅助工具', judgeGroup:'B', description:'RAG+语义匹配方案有一定技术深度，90%+提效数据有测算依据，但效率值占位符未填、作品尚未完全完成', link:'https://alidocs.dingtalk.com/i/nodes/ZX6GRezwJlzeYoPLFrM0Dyo9WdqbropQ', aiScores:[17,16,13,0,0] },
+      { id:'w_p11', team:'个人赛', name:'之柚-我的CP换了么', judgeGroup:'A', description:'AI主要用于开发阶段，运行时仅FAQ关键词匹配和MRD维度检查，应用深度较浅，但Demo平台已实际运行（12任务/4分站/40%进度）', link:'https://alidocs.dingtalk.com/i/nodes/P7QG4Yx2Jpx4OolYCglqroOLJ9dEq3XD', aiScores:[16,11,17,0,0] },
+      { id:'w_p08', team:'个人赛', name:'严蕾-轨迹智能映射辅助工具', judgeGroup:'B', description:'RAG+语义匹配方案有一定技术深度，90%+提效数据有测算依据，Demo系统已上线运行（5个功能tab/物流生命周期流程图）', link:'https://alidocs.dingtalk.com/i/nodes/ZX6GRezwJlzeYoPLFrM0Dyo9WdqbropQ', aiScores:[17,16,15,0,0] },
       { id:'w_t08', team:'团队赛', name:'揽收异常智能稽核系统', judgeGroup:'C', description:'多模态AI识别+规则引擎+自动化编排，AI应用深度最强，有实际报告产出，但量化效果数据未以文字呈现', link:'https://alidocs.dingtalk.com/i/nodes/dpYLaezmVNRMGX56CG5GZKy9VrMqPxX6', aiScores:[25,20,16,0,0] },
-      { id:'w_t05', team:'团队赛', name:'技能大赛平台', judgeGroup:'D', description:'量化数据扎实、平台可复用性强，但AI应用仅限出题生成，整体偏线上化工程而非AI深度创新', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2p2gEAo8n4qY5Pr', aiScores:[26,16,18,0,0] },
+      { id:'w_t05', team:'团队赛', name:'技能大赛平台', judgeGroup:'D', description:'量化数据扎实、Demo平台完成度高（游戏化登峰计划/4阶段关卡/像素风UI），但AI应用仅限出题生成，整体偏线上化工程而非AI深度创新', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2p2gEAo8n4qY5Pr', aiScores:[26,16,19,0,0] },
       { id:'w_t09', team:'团队赛', name:'预提Skill', judgeGroup:'A', description:'痛点聚焦但影响面窄，以规则驱动为主AI深度不足，完成度仅70%且自动化闭环尚未打通', link:'https://alidocs.dingtalk.com/i/nodes/6LeBq413JA9BOdm2irLrvx29JDOnGvpb', aiScores:[16,12,10,0,0] },
       { id:'w_t04', team:'团队赛', name:'全链路运营智能数字助理', judgeGroup:'B', description:'五大场景均有量化提效数据且已实际运行，但核心技术偏RPA脚本自动化，AI推理深度有限', link:'https://alidocs.dingtalk.com/i/nodes/YMyQA2dXW7gYo6Mzc535ExKRWzlwrZgb', aiScores:[22,14,18,0,0] },
       { id:'w_p06', team:'个人赛', name:'曾丽娥-客户批量查件', judgeGroup:'C', description:'基于AI Skill的7步决策链实现多数据源批量查件，实测9758条覆盖率100%，效率提升50%，但影响面有限且AI深度偏规则驱动', link:'https://alidocs.dingtalk.com/i/nodes/o14dA3GK8gQlkoYwcK2E417pV9ekBD76', aiScores:[20,15,20,0,0] },
-      { id:'w_t03', team:'团队赛', name:'航空货运智能组板装载率可视化系统', judgeGroup:'D', description:'AI算法结合3D可视化解决航空组板NP-hard问题，判断时间减少88%、装载率提升10%，技术创新深度突出但量化数据偏估算', link:'https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUKoKZnKA8xEKBD6p', aiScores:[26,22,18,0,0] },
+      { id:'w_t03', team:'团队赛', name:'航空货运智能组板装载率可视化系统', judgeGroup:'D', description:'AI算法结合3D可视化解决航空组板NP-hard问题，Demo已确认可用（3D预览/13种板型/三步引导），判断时间减少88%、装载率提升10%', link:'https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUKoKZnKA8xEKBD6p', aiScores:[26,22,19,0,0] },
       { id:'w_t01', team:'团队赛', name:'AI定价仿真测算系统', judgeGroup:'B', description:'定价全链路仿真系统化程度高，损益差异率0.5%验证扎实，但AI应用深度较浅，核心偏业务系统数字化而非AI驱动创新', link:'https://alidocs.dingtalk.com/i/nodes/7NkDwLng8Za7QYkeHxnxYMeMJKMEvZBY', aiScores:[24,14,22,0,0] },
       { id:'w_p09', team:'个人赛', name:'李锦云-渠道后线客服配置Skills', judgeGroup:'A', description:'痛点真实但影响面窄，单渠道效率未提升，缺乏实际使用数据，本质为RPA+AI意图解析', link:'https://alidocs.dingtalk.com/i/nodes/amweZ92PV6DbOdgzUKoq4oDy8xEKBD6p', aiScores:[13,11,10,0,0] },
       { id:'w_t06', team:'团队赛', name:'采购决策及自动化提单AI助手', judgeGroup:'C', description:'百亿级业务场景，三层AI架构成熟，4重硬校验反幻觉，试点2天8个真实立项近3亿获批0返工，数据扎实', link:'https://alidocs.dingtalk.com/i/nodes/ZgpG2NdyVXRmQ0jgCGeG3be98MwvDqPk', aiScores:[27,22,21,0,0] },
@@ -615,7 +615,7 @@ var state = {
       { id:'w_p04', team:'个人赛', name:'王皓天-航空物流部ChatBI机器人', judgeGroup:'A', description:'Agent+持久记忆+反馈学习闭环展现了扎实的技术深度和系统可进化性，但影响面局限于单团队周报场景，量化规模偏小', link:'https://alidocs.dingtalk.com/i/nodes/KGZLxjv9VGkoG9YwH1pZGqGOV6EDybno', aiScores:[17,19,16,0,0] },
       { id:'w_p07', team:'个人赛', name:'黄雄-成本差异归因分析自动化', judgeGroup:'B', description:'已投产4周验证了落地性，但AI主要用于编码辅助和话术生成而非Agent级推理，20-30%提效幅度有限', link:'https://alidocs.dingtalk.com/i/nodes/lyQod3RxJKe9QjOMi4Bl5jymWkb4Mw9r', aiScores:[16,14,16,0,0] },
       { id:'w_t07', team:'团队赛', name:'晚必赔AI运营协同方案', judgeGroup:'C', description:'异构工具编排(ChatBI+浏览器自动化+MCP)解决两大运营痛点，日均节省5人时已量化验证，并推广至欧洲团队复用', link:'https://alidocs.dingtalk.com/i/nodes/N7dx2rn0JbxOaqnAC2l25epxWMGjLRb3', aiScores:[25,21,21,0,0] },
-      { id:'w_p10', team:'个人赛', name:'汪剑峰-听Q鉴宝', judgeGroup:'D', description:'多维用户评估体系设计精巧，单次查询从30分钟降至20秒，但场景聚焦于低频赔付评估且缺少整体工时节约统计', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2pLPqNq8n4qY5Pr', aiScores:[22,20,18,0,0] },
+      { id:'w_p10', team:'个人赛', name:'汪剑峰-听Q鉴宝', judgeGroup:'D', description:'多维用户评估体系设计精巧，已上架菜鸟Skills市场（RFM分层+生命周期判断），单次查询从30分钟降至20秒，但场景聚焦于低频赔付评估', link:'https://alidocs.dingtalk.com/i/nodes/Obva6QBXJwxNZoMOC2pLPqNq8n4qY5Pr', aiScores:[22,20,19,0,0] },
       { id:'w_t02', team:'团队赛', name:'跨境人人都是科学家', judgeGroup:'B', description:'RAG+Agent数据查询助手架构合理但偏标准化，业务价值缺乏量化数据，作品完成度仅80%且无效果验证指标', link:'https://alidocs.dingtalk.com/i/nodes/qnYMoO1rWxrkmoj2Ize9wzqyJ47Z3je9', aiScores:[15,16,13,0,0] }
     ],
     judgeGroups: {
