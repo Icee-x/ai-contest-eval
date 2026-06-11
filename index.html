@@ -583,7 +583,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
 
 <script>
 // ==================== STATE ====================
-var STORAGE_KEY = 'ai_contest_eval_v8_final';
+var STORAGE_KEY = 'ai_contest_eval_v9_final';
 var AI_DIM_COUNT = 3; // first 3 dimensions are AI-scored
 
 var state = {
@@ -693,7 +693,7 @@ function loadData() {
     if (saved) {
       var data = JSON.parse(saved);
       if (data.config) state.config = data.config;
-      if (data.judgeScores) state.judgeScores = data.judgeScores;
+      if (data.judgeScores && Object.keys(data.judgeScores).length > 0) state.judgeScores = data.judgeScores;
       if (data.currentJudge) state.currentJudge = data.currentJudge;
       if (data.currentJudgeGroup) state.currentJudgeGroup = data.currentJudgeGroup;
     }
